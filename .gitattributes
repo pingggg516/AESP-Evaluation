@@ -1,0 +1,5 @@
+*.py text eol=lf
+*.md text eol=lf
+# Prompt and identity resources are hashed as shipped bytes. Do not let Git
+# autocrlf rewrite them on Windows.
+aesp/assets/** -text
