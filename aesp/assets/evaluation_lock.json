@@ -1,0 +1,160 @@
+{
+  "evaluation_id": "aesp-evaluator",
+  "scope": "prediction_preparation_and_scoring",
+  "source_hash_encoding": "utf8_universal_newlines",
+  "source_sha256": {
+    "__init__.py": "0220afd5a968a3f85859bd26c881e69e0939bd07b27f892a0c61834d9fa1c9e4",
+    "__main__.py": "3129adff95e0f38b87ab34cddfc27082c7892bcaec267ff5d40f160fdf55b44a",
+    "cli.py": "eab2ce3548489b5083d0147dc8f8e0851e62411092d0fe09628c157ecad8a6af",
+    "evaluation_release.py": "a5480b5f16b38498e062625fbf7976fa44849b0b8778e23fab4b5338277db06c",
+    "extraction.py": "9e03c20e1c1cd20b5a2f140be1d5bd90a60cdebf534e895c42c4fb4012dab69e",
+    "binary_guard.py": "a0c903815f21eb1b798dd77e1a294e34ed1f89e814213810c45b3fcf23838793",
+    "extractor_identity.py": "bb7e3f40e39b9e232eeb01c3bc14ec542a65bf41d5016b195b03f9a4d87f0a85",
+    "generation_status.py": "a49427b74ad0a7aacd73c51d28e655975c03bc950472052c737aa82f8532c646",
+    "io.py": "6fa45c4111fa76b589760c9aecf0fd4c90ac7bdb7d870530cad30f9bf5a9c427",
+    "parsing.py": "e6d417fd8a63d5435dce09254e498ebd8f5524379a5a54b4eabe6b812f30f678",
+    "pipeline.py": "bf9d01bccb57a9a19921d0ebb739615b8a2da3f51b083f9b9c836bdc3352413d",
+    "regions.py": "13d5d15342135818edcab24e9c803af5d9b259534b9fa44117ba03bdcab4204e",
+    "scoring.py": "5b3a48f46496fb09c256e5df6b0dbe989181a92ec3fdd2a4cd3f86c9e8049e8f"
+  },
+  "resource_sha256": {
+    "assets/binary_prompt.txt": "8af61218068071b17858e0fb7d092e7c536990701b359f458d9b62ec9e70ebbe",
+    "assets/counting_examples.txt": "e1af1f228fd7d38a5f235eea47cb0047163dd27bb0277f344c0407d0275f0be3",
+    "assets/extraction_rule.txt": "279ab4b2077d0d2ec04bc9b6819717a3fc63f9497559b6705d6d40f9bd9cbef4",
+    "assets/SHA256SUMS.json": "9c9870ac8b4d066a011342fb83af0cb17f889c4d34e39fd8f65860e6ad1b055c",
+    "assets/extractor_checkpoint.json": "acb999b5a8322d12e8cae7617a569d187da756efa04c4e098cbb60cfa6d19324"
+  },
+  "reference_cpu": {
+    "python_minor": "3.10",
+    "numpy": "2.2.6"
+  },
+  "supported_evaluation_runtimes": [
+    {
+      "python_minor": "3.10",
+      "numpy": "2.2.6"
+    }
+  ],
+  "reference_extractor": {
+    "python_minor": "3.10",
+    "numpy": "2.2.6",
+    "torch": "2.5.1+cu121",
+    "transformers": "4.51.3",
+    "accelerate": "1.3.0",
+    "tokenizers": "0.21.1",
+    "huggingface-hub": "0.36.2",
+    "safetensors": "0.8.0"
+  },
+  "answer_extraction": {
+    "model": "Qwen/Qwen3-14B",
+    "revision": "40c069824f4251a91eefaf281ebe4c544efd3e18",
+    "prompt_hashes": {
+      "binary_template_sha256": "68b71f3c6dcc08de4e38a09f781390d64ea7cfbedd1e2c49549d861c85364fc2",
+      "counting_demos_sha256": "8f84f225326a8b4beba4f80a4bac5d426b08459c910375d8a7c7e2fb1adf7ea0",
+      "extraction_rule_sha256": "946ef6528283c4ec953efeadbc635c77e026861ee003a4add2c7768671687cd1",
+      "asset_byte_sha256": {
+        "binary_prompt.txt": "8af61218068071b17858e0fb7d092e7c536990701b359f458d9b62ec9e70ebbe",
+        "counting_examples.txt": "e1af1f228fd7d38a5f235eea47cb0047163dd27bb0277f344c0407d0275f0be3",
+        "extraction_rule.txt": "279ab4b2077d0d2ec04bc9b6819717a3fc63f9497559b6705d6d40f9bd9cbef4"
+      },
+      "hash_serialization": "json.dumps(ensure_ascii=False, sort_keys=True, allow_nan=False); UTF-8"
+    },
+    "settings": {
+      "dtype": "bfloat16",
+      "quantization": null,
+      "do_sample": false,
+      "num_beams": 1,
+      "batch_size": 4,
+      "max_new_tokens": 256,
+      "max_input_tokens": 6000,
+      "seed": 20260906,
+      "enable_thinking": false,
+      "padding_side": "left",
+      "add_special_tokens": false,
+      "truncation": false,
+      "use_cache": true,
+      "attn_implementation": "sdpa",
+      "trust_remote_code": false,
+      "allow_tf32": false
+    },
+    "decision_policy_sha256": "a4273368e39e270aba38795b6a4d54eb6d4ca89bca2a324049846c0754a3d1e0",
+    "checkpoint_manifest": "assets/extractor_checkpoint.json",
+    "inputs": [
+      "question",
+      "task_type",
+      "target_classes",
+      "answer_text"
+    ],
+    "image_or_gt_access": false,
+    "binary_extraction": "binary answer extraction; closed-grammar semantic guard after valid Qwen A/B/Z output; raw generation preserved"
+  },
+  "external_submission": {
+    "command": "python -m aesp evaluate",
+    "workflow": [
+      "validate_prediction_jsonl",
+      "validate_original_pixel_boxes_and_extract_answers",
+      "score"
+    ],
+    "output_files": [
+      "predictions.json",
+      "extracted_answers.json",
+      "case_results.json",
+      "metrics.json",
+      "run_manifest.json"
+    ],
+    "output_format": "UTF-8 JSON with two-space indentation and a final newline; sample files are arrays of objects; metrics and manifest are objects",
+    "answer_cache": "optional extracted_answers.json array from a completed evaluation; IDs must match the submitted predictions; validated before reuse",
+    "file_format": "UTF-8 JSONL (optional BOM); one object per unique nonblank string sample_id; every prediction ID must have a matching annotation; unused annotations are excluded from evaluation",
+    "evaluation_samples": "submitted predictions only, processed in annotation order; metrics and run manifest record annotation, evaluated and unused annotation counts",
+    "annotation_required_fields": [
+      "sample_id",
+      "question",
+      "task_type",
+      "source_dataset",
+      "target_classes",
+      "gt_answer",
+      "all_relevant_gt_objects",
+      "image_width",
+      "image_height"
+    ],
+    "gt_objects": "all_relevant_gt_objects: [{class: target_class, bbox: [x1,y1,x2,y2]}]; original image pixels",
+    "raw_prediction_required_fields": [
+      "sample_id",
+      "raw_answer",
+      "evidence_boxes"
+    ],
+    "extra_prediction_fields": "ignored; only sample_id, raw_answer and evidence_boxes are consumed; --model supplies the result label",
+    "raw_prediction_regions": "only evidence_boxes; raw_answer coordinates never supply scoring boxes",
+    "coordinate_contract": "original-image pixels, origin at upper left, x rightward, y downward; no unit option or coordinate conversion",
+    "structured_boxes_format": "evidence_boxes: [[xmin,ymin,xmax,ymax], ...]; no boxes: []; four finite numbers, positive area, entirely within the original image; values preserved without clipping or reordering",
+    "answer_view": "unambiguous JSON language fields plus comments and surrounding prose; other responses preserved whole for the frozen extractor; no coordinate grammar required",
+    "json_response_comments": "line/block comments in response JSON retained in source order with semantic fields; explanations and corrections preserved",
+    "generation_status": "external prediction status fields are ignored; AESP answer-extraction results and caches still reject processing failures",
+    "vlm_inference_required": false
+  },
+  "scoring": {
+    "tasks": [
+      "existence",
+      "counting",
+      "comparison"
+    ],
+    "coordinate_format": "original_image_continuous_xyxy",
+    "localization_iou_threshold": 0.5,
+    "localization_matching": "maximum_cardinality_one_to_one",
+    "support": "each_GT_center_covered_by_any_predicted_box_counted_once",
+    "evidence_subset": "exclude_GT_negative_existence",
+    "AA": "answer_correct/all_samples",
+    "Loc_P_R_F1": "micro_aggregate_on_evidence_subset",
+    "ES_overall": "answer_supported/evidence_subset",
+    "ES_correct": "correct_and_supported/correct_answers_in_evidence_subset",
+    "JS": "correct_and_supported/evidence_subset",
+    "invalid_answers": "retained_in_denominators",
+    "zero_denominator": null,
+    "metric_scale": "percent"
+  },
+  "limits": [
+    "No arbitrary-model inference compatibility claim.",
+    "Scoring geometry comes only from submitted original-image pixel xyxy evidence_boxes.",
+    "Frozen LLM extraction can make semantic errors.",
+    "Source integrity does not authenticate externally supplied predictions or caches."
+  ]
+}
