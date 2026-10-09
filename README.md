@@ -79,8 +79,8 @@ For comparison questions, equal counts correspond to `"no"`.
 
 ### Download
 
-**[Download GroundedRSVQA from Baidu Netdisk](https://pan.baidu.com/s/1ltJ8L8xYvEkkoez1k7ZQ9Q?pwd=0516)**  
-**Extraction code:** `0516`
+**Download GroundedRSVQA by clicking [Here](https://pan.baidu.com/s/1ltJ8L8xYvEkkoez1k7ZQ9Q?pwd=0516)**, and Extraction code: `0516`
+
 
 The download contains:
 
@@ -134,11 +134,11 @@ Keep `images/` and `annotations.jsonl` in the same directory. Image paths in the
 | `source_dataset`, `source_split` | Original dataset and split. |
 | `source_image_id`, `source_image_filename`, `source_annotation_id` | Identifiers linking the sample to its source image and annotation. |
 
-**Bounding boxes use `[xmin, ymin, xmax, ymax]` in original-image pixels.** The first pair is the top-left corner; the second is the bottom-right corner. For comparison questions, the order in `target_classes` matches the order of the classes in the question.
+**Bounding boxes use `[xmin, ymin, xmax, ymax]` in original-image pixels.** The first pair is the top-left corner; the second is the bottom-right corner.
 
-`all_relevant_gt_objects` contains the complete set of annotated objects belonging to the queried classes. For a negative existence sample, this list is empty: `[]`.
+`all_relevant_gt_objects` contains the complete set of annotated objects belonging to the queried classes. For a negative existence sample whose GT answer is `No`, this list is empty: `[]`.
 
-These annotations provide the **ground truth** for evaluation. Users run their models on the images and questions, then submit their predictions to AESP.
+These annotations provide the **ground truth** for evaluation. Users are responsible for running inference with the model they wish to evaluate on the benchmark images and questions. They then format the model outputs as required by AESP and submit that to AESP.
 
 ### Sources and citations
 
