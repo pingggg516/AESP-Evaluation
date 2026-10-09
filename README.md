@@ -198,7 +198,7 @@ AESP uses the official **Qwen/Qwen3-14B** checkpoint, loaded in **BF16 without q
 - **Official model:** [Qwen/Qwen3-14B](https://huggingface.co/Qwen/Qwen3-14B)
 - **Required checkpoint:** [40c069824f4251a91eefaf281ebe4c544efd3e18](https://huggingface.co/Qwen/Qwen3-14B/tree/40c069824f4251a91eefaf281ebe4c544efd3e18)
 
-Download this checkpoint:
+Download this checkpoint in the `AESP-Evaluation` root directory.:
 
 ```bash
 hf download Qwen/Qwen3-14B \
@@ -212,31 +212,41 @@ The checkpoint, extraction prompts, and generation settings are fixed by AESP. U
 
 ### 3. Prepare model predictions
 
-Run the model you wish to evaluate on the benchmark images and questions. Save its outputs as a **UTF-8 JSONL file**, with one sample per line.
-
-Each sample requires these three fields:
+Run inference with the model you want to evaluate, then organize its outputs into a **UTF-8 JSONL file, with one prediction per line**. Each prediction must contain these three fields:
 
 | Field | Required content |
 | --- | --- |
-| `sample_id` | The sample identifier from `annotations.jsonl`, stored as a string. |
-| `raw_answer` | The complete original response produced by the evaluated model. |
-| `evidence_boxes` | Predicted boxes in original-image pixels, each formatted as `[xmin, ymin, xmax, ymax]`. |
+| `sample_id` | A string matching the `sample_id` of the corresponding sample in `annotations.jsonl`. Preserve leading zeros, such as `"00001"`. |
+| `raw_answer` | The model's complete original response, stored as a string. AESP extracts the language answer from this text. |
+| `evidence_boxes` | A list of predicted boxes in **original-image pixel coordinates**. Each box must contain exactly four numbers in `[xmin, ymin, xmax, ymax]` order. |
 
-Example of one prediction record:
+Example of one line in the prediction file:
 
 ```json
 {"sample_id":"00001","raw_answer":"No. There are fewer basketball courts than tennis courts.","evidence_boxes":[[380,120,730,505],[240,270,535,605],[75,395,375,715]]}
 ```
 
-**Prediction requirements:**
+### Prediction requirements
 
-- Every annotation sample must have exactly one prediction with the same `sample_id`. The two files must contain exactly the same set of sample IDs.
-- Preserve the complete model response in `raw_answer`. Use JSON-escaped line breaks (`\n`) if the response spans multiple lines.
-- Put the model's predicted boxes in `evidence_boxes`. If the model produces no boxes, use `[]`.
-- Convert boxes to **original-image pixel coordinates before submission**. Each box must satisfy `0 <= xmin < xmax <= image_width` and `0 <= ymin < ymax <= image_height`. Integer and floating-point coordinates are accepted.
-- AESP uses `evidence_boxes` directly for scoring. Coordinates appearing only inside `raw_answer` are not used as scoring boxes.
+1. **Match predictions to annotations.** Each prediction's `sample_id` must match the corresponding `sample_id` in `annotations.jsonl`. Your prediction file must cover all samples in the annotation file, without duplicate, missing, or extra IDs. The records do not need to appear in the same order.
 
-Keep any recorded inference failure or truncation information, such as `"status": "failed"`, `"finish_reason": "length"`, or `"truncated": true`. If any sample is explicitly marked as failed or truncated, AESP stops the evaluation and reports the sample and reason.
+2. **Preserve the original response.** Store the complete model response in `raw_answer`. Do not replace it with the ground-truth answer or a manually rewritten answer.
+
+3. **Use coordinate-only box lists.** Each box in `evidence_boxes` must be `[xmin, ymin, xmax, ymax]`. Separate multiple boxes with commas inside the outer list:
+   ```json
+   "evidence_boxes": [[100, 120, 200, 240], [300, 320, 400, 440]]
+   ```
+   Include **only numeric coordinates**: no object names, class labels, or other strings. AESP determines the categories of covered objects from the ground-truth annotations.
+
+4. **Use the original image dimensions.** Coordinates must refer to the original image, not a resized or cropped model input. Each box must satisfy:
+   - `0 <= xmin < xmax <= image_width`
+   - `0 <= ymin < ymax <= image_height`
+
+   Integer and floating-point coordinates are both accepted. Complete any required coordinate conversion before submission.
+
+5. **Use an empty list when no boxes were predicted.** Write `"evidence_boxes": []`; do not omit the field or use `null`.
+
+6. **Preserve explicit failure or truncation indicators.** If inference failed or the response was truncated, retain that status in the record. AESP stops evaluation and reports the affected sample when it detects an explicitly failed or truncated prediction.
 
 ### 4. Run evaluation
 
