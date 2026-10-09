@@ -4,20 +4,49 @@
 
 ## Motivation
 
-Visual grounding connects language to specific regions in an image. In grounded visual question answering, a vision-language model (VLM) provides these regions alongside its textual answer as visual evidence, allowing users to inspect which objects or image content support its response. This makes the relationship between the answer and the returned regions central to the purpose of grounding.
+### Grounding as visual evidence
 
-Yet this relationship can break down. A model may return a correct answer and accurately localize relevant objects, while the objects covered by its evidence do not collectively support what it says. The evidence may omit instances required by a stated count or fail to establish the relationship asserted in a comparison.
+Visual grounding connects language to specific regions in an image. In grounded visual question answering, a vision-language model (VLM) returns these regions alongside its answer as visual evidence. Users can then inspect the objects presented as support for the model's response.
 
-![Examples illustrating answer-grounding inconsistency in counting and comparison tasks.](figures/motivation.jpg)
+For grounding to serve this purpose, **the returned evidence should support what the model says.**
 
-*Figure 1. Correct answers and high localization scores do not guarantee that the returned grounding evidence supports the answer.*
+### When the evidence does not support the answer
 
-For example, a model correctly answers that an image contains ten storage tanks but grounds only nine, achieving a grounding F1 score of 94.7%. Similarly, it correctly answers that tennis courts outnumber baseball fields but grounds two of each, achieving an F1 score of 88.9%. In both cases, the answer is correct, but the returned evidence fails to support its claim.
+A model can answer correctly and localize relevant objects accurately, yet return evidence that fails to support its answer. Our counting and comparison examples illustrate this problem.
 
-Standard answer-accuracy and localization metrics do not directly evaluate this relationship. Answer accuracy compares the response with the reference answer; localization metrics compare predicted regions with annotated object locations. High scores on these measurements can therefore coexist with a mismatch between the model's language answer and its visual evidence.
+![Answer-grounding inconsistency in counting and comparison tasks.](figures/motivation.jpg)
 
-**This gap matters for the trustworthiness of grounded VLM responses.** Grounding gives users something concrete to inspect, but its value as evidence depends on whether it supports the accompanying claim. When this connection is missing, a response can appear visually justified without providing sufficient justification. Evaluating this connection is necessary to determine whether the returned regions deserve to be treated as supporting evidence.
+*Figure 1. Correct answers and high localization scores do not guarantee answer-grounding consistency.*
 
-We introduce **AESP (Answer-Evidence Support Protocol)** to explicitly assess this relationship in remote sensing VQA. AESP identifies annotated target objects covered by the predicted evidence regions and applies task-specific rules for existence, counting, and comparison to determine whether they support **the model's own answer**.
+| Task | Model's answer | Returned evidence | Grounding F1 |
+| --- | --- | --- | --- |
+| Counting | There are **10 storage tanks**. | Only **9 storage tanks** are covered. | **94.7%** |
+| Comparison | There are **more tennis courts than baseball fields**. | **2 tennis courts and 2 baseball fields** are covered. | **88.9%** |
 
-Together with answer accuracy and localization quality, evidence support provides a more informative assessment of grounded responses: whether the answer is correct, whether the regions are accurately localized, and whether their contents support the answer. It makes the evidence presented by a VLM auditable, while leaving the separate question of the model's internal reasoning process open.
+Both answers are correct. However, nine grounded tanks do not establish a count of ten, and equal grounded counts do not establish “more than.”
+
+> **Relevant objects do not necessarily provide sufficient evidence for the answer.**
+
+### What standard metrics miss
+
+Answer accuracy and localization quality assess different parts of a grounded response. Neither directly checks the logical relationship between them.
+
+| Evaluation dimension | Question being evaluated |
+| --- | --- |
+| **Answer accuracy** | Does the model's answer match the reference answer? |
+| **Localization quality** | Do the predicted regions match the annotated object locations? |
+| **Evidence support — AESP** | Do the objects covered by the predicted regions support the model's own answer? |
+
+The third question cannot be answered simply by reporting high scores on the first two.
+
+### From grounding to trustworthy answers
+
+This gap affects the trustworthiness of grounded VLM responses. Grounding allows users to inspect an answer's visual basis, but relevant-looking boxes can still provide incomplete or inconsistent evidence. **Trust in a grounded response therefore depends on the connection between its answer and its evidence.**
+
+We introduce **AESP (Answer-Evidence Support Protocol)** to explicitly evaluate this connection in remote sensing VQA. AESP identifies annotated target objects covered by the predicted evidence regions and checks whether they support the model's answer under task-specific rules:
+
+- **Existence:** whether the covered objects support the stated presence or absence.
+- **Counting:** whether the covered objects support the stated count.
+- **Comparison:** whether the covered objects support the stated numerical relationship.
+
+Evaluated alongside answer accuracy and localization quality, AESP distinguishes correct answers with supporting evidence from correct answers with unsupported claims. It assesses the evidence that the model presents to users; establishing how the model internally reached its answer remains a separate question.
