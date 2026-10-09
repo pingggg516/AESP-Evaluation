@@ -144,7 +144,7 @@ These annotations provide the **ground truth** for evaluation. Users are respons
 
 GroundedRSVQA adds question–answer pairs and organizes the source object annotations for grounded VQA. SODA-A polygon annotations are converted to horizontal bounding boxes using all polygon vertices.
 
-Please acknowledge GroundedRSVQA/AESP and cite the original datasets when using this benchmark.
+G-RSVQA builds on DIOR, NWPU VHR-10, and SODA-A. We thank their creators for providing the images and object annotations. The source publications and license information are listed below.
 
 **DIOR**
 
