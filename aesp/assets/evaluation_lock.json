@@ -5,8 +5,8 @@
   "source_sha256": {
     "__init__.py": "0220afd5a968a3f85859bd26c881e69e0939bd07b27f892a0c61834d9fa1c9e4",
     "__main__.py": "3129adff95e0f38b87ab34cddfc27082c7892bcaec267ff5d40f160fdf55b44a",
-    "cli.py": "84587c58488d981ff0c1678028639582ec0e646660586bd1a4be00cd718a7f5f",
-    "evaluation_release.py": "ec8cfd62d2f9f41533353d89323089dc3318ba01aacec2dff491f2e6723f2377",
+    "cli.py": "d58b616cccba19b9c9a323638cc6e7bb2c6a993d13ac70210398c595a524fd5c",
+    "evaluation_release.py": "8dcbf1aabedd7f2fbab16fc49bfc4a0e049bb281ee85d89a44b745083395d0fa",
     "extraction.py": "9e03c20e1c1cd20b5a2f140be1d5bd90a60cdebf534e895c42c4fb4012dab69e",
     "binary_guard.py": "a0c903815f21eb1b798dd77e1a294e34ed1f89e814213810c45b3fcf23838793",
     "extractor_identity.py": "bb7e3f40e39b9e232eeb01c3bc14ec542a65bf41d5016b195b03f9a4d87f0a85",
@@ -102,8 +102,9 @@
       "run_manifest.json"
     ],
     "output_format": "UTF-8 JSON with two-space indentation and a final newline; sample files are arrays of objects; metrics and manifest are objects",
-    "answer_cache": "optional extracted_answers.json array from a completed evaluation; validated before reuse",
-    "file_format": "UTF-8 JSONL (optional BOM); one object per unique nonblank string sample_id; annotation and prediction IDs must match exactly",
+    "answer_cache": "optional extracted_answers.json array from a completed evaluation; IDs must match the submitted predictions; validated before reuse",
+    "file_format": "UTF-8 JSONL (optional BOM); one object per unique nonblank string sample_id; every prediction ID must have a matching annotation; unused annotations are excluded from evaluation",
+    "evaluation_samples": "submitted predictions only, processed in annotation order; metrics and run manifest record annotation, evaluated and unused annotation counts",
     "annotation_required_fields": [
       "sample_id",
       "question",
