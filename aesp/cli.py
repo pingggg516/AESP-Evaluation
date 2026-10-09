@@ -33,12 +33,21 @@ def run_evaluate(args):
     if args.batch_size != 4:
         raise ValueError("The frozen answer extraction protocol requires --batch-size 4")
     annotations = indexed(read_jsonl(args.annotations), "annotations")
+    predictions = indexed(read_jsonl(args.predictions), "raw predictions")
+    unknown = sorted(set(predictions) - set(annotations))
+    if unknown:
+        raise ValueError(f"raw predictions: {len(unknown)} sample ID(s) have no matching annotation: {unknown[:5]}")
+    sample_scope = {
+        "annotation_records": len(annotations),
+        "evaluated_records": len(predictions),
+        "unused_annotation_records": len(annotations) - len(predictions),
+    }
+    # Preserve annotation order so reordering predictions does not change extraction batches.
+    annotations = {sid: sample for sid, sample in annotations.items() if sid in predictions}
     for sample in annotations.values():
         _validate_sample(sample)
         if not isinstance(sample.get("question"), str) or not sample["question"].strip():
             raise ValueError("Annotation question must be a nonempty string")
-    predictions = indexed(read_jsonl(args.predictions), "raw predictions")
-    aligned(annotations, predictions, "raw predictions")
     inference_provenance = summarize_inference_provenance(predictions.values())
     labels = [p.get("model", args.model or "custom") for p in predictions.values()]
     if any(not isinstance(name, str) or not name.strip() for name in labels):
@@ -53,7 +62,7 @@ def run_evaluate(args):
         if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
             raise ValueError("Answer cache must be the extracted_answers.json array from a completed evaluation")
         answers = indexed(rows, "answer cache")
-        aligned(annotations, answers, "answer cache")
+        aligned(predictions, answers, "answer cache")
     input_hashes = {
         "annotations_sha256": sha256(args.annotations),
         "raw_predictions_sha256": sha256(args.predictions),
@@ -86,6 +95,7 @@ def run_evaluate(args):
         metadata = extractor.metadata()
     cases = [score_case(annotations[pred["sample_id"]], pred) for pred in normalized]
     report = {"model": model, "groups": summarize(cases), "protocol": "AESP",
+              "sample_scope": sample_scope,
               "inference_provenance": inference_provenance,
               "evaluation_protocol": evaluation_protocol}
     extraction_identities = {}
@@ -108,6 +118,7 @@ def run_evaluate(args):
                      for name in ("predictions", "extracted_answers", "case_results", "metrics")}
     write_json(out / "run_manifest.json", {
         "mode": "evaluate", "records": len(cases), "model": model, "routes": routes,
+        "sample_scope": sample_scope,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         **input_hashes, **output_hashes, "extractor": metadata,
         "answer_extraction_provenance": {
@@ -153,8 +164,8 @@ def main(argv=None):
     verify.add_argument("--output", type=Path, help="Optional new JSON report file; must not exist")
     verify.set_defaults(func=run_verify_evaluation)
     evaluate = commands.add_parser("evaluate", help="Extract language answers and score submitted original-image pixel xyxy boxes in one run")
-    evaluate.add_argument("--annotations", required=True, type=Path)
-    evaluate.add_argument("--predictions", required=True, type=Path, help="UTF-8 JSONL; each record requires sample_id, raw_answer and evidence_boxes; boxes must be original-image pixel [xmin,ymin,xmax,ymax]; use [] for no boxes")
+    evaluate.add_argument("--annotations", required=True, type=Path, help="Annotation JSONL; may contain more samples than the predictions; unused samples are excluded from evaluation")
+    evaluate.add_argument("--predictions", required=True, type=Path, help="UTF-8 JSONL defining the evaluated samples; each unique sample_id must have a matching annotation; each record requires sample_id, raw_answer and evidence_boxes; boxes must be original-image pixel [xmin,ymin,xmax,ymax]; use [] for no boxes")
     evaluate.add_argument("--output", required=True, type=Path, help="New output directory; must not exist")
     evaluate.add_argument("--model", help="Optional expected model name")
     evaluate.add_argument("--answers", type=Path, help="Optional extracted_answers.json from a completed evaluation; input, prompt and generation evidence must match")
