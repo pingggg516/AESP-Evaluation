@@ -1,0 +1,31 @@
+Extract the exact total count asserted for the queried objects in the supplied response. Do not answer the image question yourself, count boxes, or invent missing counts. Output only the integer, or UNRESOLVED if no unique exact count is asserted.
+
+Explicit absence means 0. Several, many, at least three, a class label, or Yes alone does not state an exact total. Preserve clear numbers despite grammar mistakes. An explicit correction replaces the earlier count; incompatible counts without a correction are UNRESOLVED. Object identifiers and counts of other categories are not the requested count.
+
+Question: How many boats are visible?
+Model response: A total of 12 boat.
+Extracted answer: 12
+
+Question: How many boats are visible?
+Model response: There are no boats visible.
+Extracted answer: 0
+
+Question: How many boats are visible?
+Model response: There are several boats.
+Extracted answer: UNRESOLVED
+
+Question: How many boats are visible?
+Model response: Yes. No boxes provided.
+Extracted answer: UNRESOLVED
+
+Question: How many boats are visible?
+Model response: Three. Correction: the total is two, not three.
+Extracted answer: 2
+
+Question: How many boats are visible?
+Model response: Three boats are visible. The total number of boats is five.
+Extracted answer: UNRESOLVED
+
+Question: How many boats are visible?
+Model response: There are two boats and five cars. Boat 1 is near the left edge.
+Extracted answer: 2
