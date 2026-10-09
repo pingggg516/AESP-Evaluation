@@ -246,7 +246,7 @@ Example of one line in the prediction file:
 
 5. **Use an empty list when no boxes were predicted.** Write `"evidence_boxes": []`; do not omit the field or use `null`.
 
-6. **Preserve explicit failure or truncation indicators.** If inference failed or the response was truncated, retain that status in the record. AESP stops evaluation and reports the affected sample when it detects an explicitly failed or truncated prediction.
+6. **Handle failed or truncated model responses before submission.** You may rerun these samples or exclude them from your prediction file.
 
 ### 4. Run evaluation
 
@@ -279,8 +279,8 @@ For example, on a single GPU with sufficient memory, select `CUDA_VISIBLE_DEVICE
 
 The command performs the complete evaluation:
 
-1. Checks the annotations, prediction records, sample IDs, boxes, and reported generation status.
-2. Extracts bare yes/no or integer answers directly; uses the fixed Qwen3-14B extractor for free-text responses.
+1.  Validates the annotations and the required prediction fields (`sample_id`, `raw_answer`, and `evidence_boxes`), checks for duplicate or unmatched prediction IDs, and verifies the box format and coordinates against the original image dimensions.
+2. Extracts yes/no or integer answers directly; uses the fixed Qwen3-14B extractor for free-text responses.
 3. Compares the extracted answers and submitted boxes with the ground truth.
 4. Saves the results and prints the overall metrics.
 
@@ -309,8 +309,8 @@ Start with **`metrics.json`** for the overall results:
 
 - **AA:** answer accuracy.
 - **Loc_P / Loc_R / Loc_F1:** localization precision, recall, and F1.
-- **SupportRate:** proportion of eligible samples whose evidence supports the model's answer.
-- **ESR:** proportion of correctly answered eligible samples whose evidence supports the answer.
-- **Joint:** proportion of eligible samples with both a correct answer and supporting evidence.
+- **Evidence Support–Overall (ES<sub>overall</sub>):** proportion of eligible samples whose grounding evidence supports the model's own answer, regardless of answer correctness.
+- **Evidence Support–Correct Answers (ES<sub>correct</sub>):** proportion of correctly answered eligible samples whose grounding evidence supports the model's own answer.
+- **Joint Success (JS):** proportion of eligible samples with both a correct answer and supporting grounding evidence.
 
 These scores are reported as percentages. AA includes all samples. Localization and evidence metrics exclude existence samples whose ground-truth answer is `"no"`. A score is `null` when its denominator is zero.
