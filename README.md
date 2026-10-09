@@ -314,3 +314,11 @@ Start with **`metrics.json`** for the overall results:
 - **Joint Success (JS):** proportion of eligible samples with both a correct answer and supporting grounding evidence.
 
 These scores are reported as percentages. AA includes all submitted samples. Localization and evidence metrics exclude existence samples whose ground-truth answer is `"no"`. Unresolved or invalid answers are retained and counted as incorrect and unsupported; their boxes are still evaluated for localization on eligible samples. A score is `null` when its denominator is zero.
+
+## Citation
+
+If you use AESP or G-RSVQA in your research, please cite our paper.
+
+```bibtex
+% BibTeX citation will be added when the paper is available.
+```
