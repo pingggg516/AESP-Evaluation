@@ -317,7 +317,7 @@ These scores are reported as percentages. AA includes all submitted samples. Loc
 
 ## Citation
 
-If you use AESP or G-RSVQA in your research, please cite our paper.
+If you use AESP or G-RSVQA dataset in your research, please cite our paper.
 
 ```bibtex
 % BibTeX citation will be added when the paper is available.
