@@ -198,7 +198,7 @@ AESP uses the official **Qwen/Qwen3-14B** checkpoint, loaded in **BF16 without q
 - **Official model:** [Qwen/Qwen3-14B](https://huggingface.co/Qwen/Qwen3-14B)
 - **Required checkpoint:** [40c069824f4251a91eefaf281ebe4c544efd3e18](https://huggingface.co/Qwen/Qwen3-14B/tree/40c069824f4251a91eefaf281ebe4c544efd3e18)
 
-Download this checkpoint in the `AESP-Evaluation` root directory.:
+Download this checkpoint in the `AESP-Evaluation` root directory:
 
 ```bash
 hf download Qwen/Qwen3-14B \
@@ -220,7 +220,7 @@ Run inference with the model you want to evaluate, then organize its outputs int
 | `raw_answer` | The model's complete original response, stored as a string. AESP extracts the language answer from this text. |
 | `evidence_boxes` | A list of predicted boxes in **original-image pixel coordinates**. Each box must contain exactly four numbers in `[xmin, ymin, xmax, ymax]` order. |
 
-Example of one line in the prediction file:
+AESP uses only `sample_id`, `raw_answer`, and `evidence_boxes`; additional fields are ignored. Example of one line in the prediction file:
 
 ```json
 {"sample_id":"00001","raw_answer":"No. There are fewer basketball courts than tennis courts.","evidence_boxes":[[380,120,730,505],[240,270,535,605],[75,395,375,715]]}
@@ -313,4 +313,4 @@ Start with **`metrics.json`** for the overall results:
 - **Evidence Support–Correct Answers (ES<sub>correct</sub>):** proportion of correctly answered eligible samples whose grounding evidence supports the model's own answer.
 - **Joint Success (JS):** proportion of eligible samples with both a correct answer and supporting grounding evidence.
 
-These scores are reported as percentages. AA includes all samples. Localization and evidence metrics exclude existence samples whose ground-truth answer is `"no"`. A score is `null` when its denominator is zero.
+These scores are reported as percentages. AA includes all submitted samples. Localization and evidence metrics exclude existence samples whose ground-truth answer is `"no"`. Unresolved or invalid answers are retained and counted as incorrect and unsupported; their boxes are still evaluated for localization on eligible samples. A score is `null` when its denominator is zero.
