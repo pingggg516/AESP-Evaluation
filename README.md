@@ -41,7 +41,7 @@ The third question cannot be answered simply by reporting high scores on the fir
 
 ### From grounding to trustworthy answers
 
-This gap affects the trustworthiness of grounded VLM responses. Grounding allows users to inspect an answer's visual basis, but relevant-looking boxes can still provide incomplete or inconsistent evidence. **Trust in a grounded response therefore depends on the connection between its answer and its evidence.**
+This gap affects the trustworthiness of grounded VLM responses. Users expect the returned regions to provide evidence for the answer. If the objects in those regions do not support what the model says, the grounding cannot serve as reliable evidence.
 
 We introduce **AESP (Answer-Evidence Support Protocol)** to explicitly evaluate this connection in remote sensing VQA. AESP identifies annotated target objects covered by the predicted evidence regions and checks whether they support the model's answer under task-specific rules:
 
@@ -49,4 +49,4 @@ We introduce **AESP (Answer-Evidence Support Protocol)** to explicitly evaluate 
 - **Counting:** whether the covered objects support the stated count.
 - **Comparison:** whether the covered objects support the stated numerical relationship.
 
-Evaluated alongside answer accuracy and localization quality, AESP distinguishes correct answers with supporting evidence from correct answers with unsupported claims. It assesses the evidence that the model presents to users; establishing how the model internally reached its answer remains a separate question.
+Evaluated alongside answer accuracy and localization quality, AESP distinguishes correct answers with supporting evidence from correct answers with unsupported claims and assesses the evidence that the model presents to users.
