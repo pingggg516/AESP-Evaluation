@@ -228,7 +228,7 @@ Example of one line in the prediction file:
 
 ### Prediction requirements
 
-1. **Match predictions to annotations.** Each prediction's `sample_id` must match the corresponding `sample_id` in `annotations.jsonl`. Your prediction file must cover all samples in the annotation file, without duplicate, missing, or extra IDs. The records do not need to appear in the same order.
+1. **Match predictions to annotations.** Each prediction must have a unique `sample_id` matching the corresponding sample in `annotations.jsonl`. You may submit predictions for any subset, such as a validation or test you split by yourself.  Duplicate prediction IDs or IDs without matching annotations cause an error. Prediction records may appear in any order.
 
 2. **Preserve the original response.** Store the complete model response in `raw_answer`. Do not replace it with the ground-truth answer or a manually rewritten answer.
 
