@@ -212,7 +212,9 @@ The checkpoint, extraction prompts, and generation settings are fixed by AESP. U
 
 ### 3. Prepare model predictions
 
-Run inference with the model you want to evaluate, then organize its outputs into a **UTF-8 JSONL file, with one prediction per line**. Each prediction must contain these three fields:
+**Users must run inference with their chosen model and organize the resulting predictions into the required format before submitting them to AESP.**
+
+Use the G-RSVQA benchmark images and questions as inputs to your model. Save its outputs in a **UTF-8 JSONL file, with one prediction per line**. Each prediction must contain the following three fields:
 
 | Field | Required content |
 | --- | --- |
