@@ -322,13 +322,10 @@ These scores are reported as percentages. AA includes all submitted samples. Loc
 If you use AESP or G-RSVQA dataset in your research, please cite our paper.
 
 ```bibtex
-@misc{guo2026benchmarkinganswergroundingconsistencyremote,
-      title={Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering}, 
-      author={Ping Guo and Zhiqi Huang and Xinran Li and Linkun Yu and Jingyin Pei and Kamata Seiichiro},
-      year={2026},
-      eprint={2610.13636},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2610.13636}, 
+@article{guo2026benchmarking,
+  title={Benchmarking Answer-Grounding Consistency in Remote Sensing Visual Question Answering},
+  author={Guo, Ping and Huang, Zhiqi and Li, Xinran and Yu, Linkun and Pei, Jingyin and Seiichiro, Kamata},
+  journal={arXiv preprint arXiv:2610.13636},
+  year={2026}
 }
 ```
